@@ -1,18 +1,15 @@
 services:
-  website:
+  app:
     image: nejito/chapter4_3.1:latest
+    container_name: express-app
     ports:
-      - 8080:8080
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    container_name: website
-
+      - "3000:3000"
+    restart: unless-stopped
 
   watchtower:
     image: containrrr/watchtower
-    environment:
-      -  WATCHTOWER_POLL_INTERVAL=60 # Poll every 60 seconds
-      -  WATCHTOWER_LABEL_ENABLE=true # only watch containers that have opted in
+    container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    container_name: watchtower
+    command: --interval 30 --cleanup
+    restart: unless-stopped
